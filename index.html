@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 5%;
+        }
+
+        .uppernumber {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 15vh;
+            color: #333;
+            text-align: center;
+            width: 100%;
+        }
+        .lowernumber {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-size: 15vh;
+            color: #333;
+            text-align: center;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .number {
+                font-size: 20vh;
+            }
+        }
+
+        @media (orientation: portrait) {
+            .number {
+                font-size: 18vh;
+            }
+        }
+
+        @media (orientation: landscape) {
+            .number {
+                font-size: 15vh;
+            }
+        }
+    </style>
+    <script>
+      const dataurl = 'https://firestore.googleapis.com/v1/projects/para-a2923/databases/(default)/documents/adatok/ylsKyIZTUr5uEFDy8Bta'
+      function getData(url) {
+        fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json(); 
+        })
+        .then(data => {
+          // Extract values
+          const hum = data.fields.hum.stringValue;
+          const temp = data.fields.temp.stringValue;
+      
+          document.getElementById("temp").textContent = temp.trim() + String.fromCharCode(176) + 'C' || "N/A";
+          document.getElementById("hum").textContent = hum.trim() + " %"|| "N/A";
+        })
+        .catch(error => {
+          console.error("Error fetching or processing data:", error);
+        });
+      }
+      
+      window.onload = getData(dataurl);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="uppernumber" id="temp"></div>
+        <div class="lowernumber" id="hum"></div>
+    </div>
+</body>
+</html>
+
